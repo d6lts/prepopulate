@@ -1,0 +1,47 @@
+<?php
+/* prepopulate.module -- fill forms with data from GET
+ * ea. Farris <eafarris@gmail.com>
+ *    based on an idea from chx, from the conversation at
+ *    http://www.drupal.org/node/27155
+
+ * used to be rest.module, from my sandbox
+*/
+
+// $Id$
+
+function prepopulate_help($section) {
+  switch($section) {
+    case 'admin/modules#description':
+      return t('Pre-populates forms for allowed content types with HTTP GET data');
+      break;
+  } // endswitch $section
+} // endfunction prepopulate_help()
+
+function prepopulate_form_alter($form_id, &$form) {
+  $type = $form['type']['#value'];
+  $node = $form['#node'];
+
+  switch ($form_id) {
+    case $type . '_node_settings': // on a node settings form, praise be to the FormsAPI!
+      $form['workflow']['prepopulate_allowed_' . $type] = array(
+        '#type' => 'checkbox',
+        '#title' => 'Prepopulate form from URL?',
+        '#default_value' => variable_get('prepopulate_allowed_' . $type, TRUE),
+        '#description' => t('Allows fields to be prepopulated from the URL'),
+      );
+    break;
+  } // endswitch $form_id
+
+  if (variable_get('prepopulate_allowed_' . $type, TRUE) && $_GET['edit']) {
+    foreach (array_keys($_GET['edit']) as $getvar) {
+      foreach (element_children($form) as $formkey) {
+        if ($getvar == $formkey) {
+          $form[$formkey]['#default_value'] = $_GET['edit'][$getvar];
+        } // endif get and form match
+      } // endforeach walking through $form
+    } // endforeach get variable
+  } // endif any get vars
+} // endfunction prepopulate_form_alter()
+
+
+// vim: tw=300 nowrap syn=php
