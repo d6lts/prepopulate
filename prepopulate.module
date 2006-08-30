@@ -34,7 +34,9 @@ function prepopulate_form_alter($form_id, &$form) {
 
   if (variable_get('prepopulate_allowed_' . $type, TRUE) && $_GET['edit']) {
     foreach (array_keys( (array) $_GET['edit']) as $getvar) {
-      _prepopulate_get_walk($form[$getvar], $_GET['edit'][$getvar]);
+      if (element_child($getvar) && !is_null($form[$getvar])) {
+        _prepopulate_get_walk($form[$getvar], $_GET['edit'][$getvar]);
+      }
     } // endforeach get variable
   } // endif any get vars
 } // endfunction prepopulate_form_alter()
@@ -45,7 +47,7 @@ function _prepopulate_get_walk(&$form, &$getslice) {
   } 
   else {
     foreach (array_keys($getslice) as $getvar) {
-      if (is_array($form) && !is_null($form[$getvar])) {
+      if (element_child($getvar) && is_array($form) && !is_null($form[$getvar])) {
         _prepopulate_get_walk($form[$getvar], $getslice[$getvar]);
       }
     } // endforeach walking through get
