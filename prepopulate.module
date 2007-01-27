@@ -33,15 +33,25 @@ function prepopulate_form_alter($form_id, &$form) {
   } // endswitch $form_id
 
   if (variable_get('prepopulate_allowed_' . $type, TRUE) && $_GET['edit']) {
-    foreach (array_keys($_GET['edit']) as $getvar) {
-      foreach (element_children($form) as $formkey) {
-        if ($getvar == $formkey) {
-          $form[$formkey]['#default_value'] = $_GET['edit'][$getvar];
-        } // endif get and form match
-      } // endforeach walking through $form
+    foreach (array_keys( (array) $_GET['edit']) as $getvar) {
+      if (element_child($getvar) && !is_null($form[$getvar])) {
+        _prepopulate_get_walk($form[$getvar], $_GET['edit'][$getvar]);
+      }
     } // endforeach get variable
   } // endif any get vars
 } // endfunction prepopulate_form_alter()
 
+function _prepopulate_get_walk(&$form, &$getslice) {
+  if (!is_array($getslice)) {
+    $form['#default_value'] = $getslice;
+  } 
+  else {
+    foreach (array_keys($getslice) as $getvar) {
+      if (element_child($getvar) && is_array($form) && !is_null($form[$getvar])) {
+        _prepopulate_get_walk($form[$getvar], $getslice[$getvar]);
+      }
+    } // endforeach walking through get
+  } // endif getslice is not an array
+} // endfunction _prepopulate_get_walk()
 
 // vim: tw=300 nowrap syn=php
