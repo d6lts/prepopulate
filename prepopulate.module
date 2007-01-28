@@ -18,19 +18,17 @@ function prepopulate_help($section) {
 } // endfunction prepopulate_help()
 
 function prepopulate_form_alter($form_id, &$form) {
+  if ($form_id == 'node_type_form' && isset($form['identity']['type'])) { // node type settings form
+    $type = $form['#node_type']->type;
+    $form['workflow']['prepopulate_allowed'] = array(
+      '#type' => 'checkbox',
+      '#title' => 'Prepopulate form from URL?',
+      '#default_value' => variable_get('prepopulate_allowed_' . $type, TRUE),
+      '#description' => t('Allows fields to be prepopulated from the URL'),
+    );
+  } // endif on a node settings form
+  
   $type = $form['type']['#value'];
-  $node = $form['#node'];
-
-  switch ($form_id) {
-    case $type . '_node_settings': // on a node settings form, praise be to the FormsAPI!
-      $form['workflow']['prepopulate_allowed_' . $type] = array(
-        '#type' => 'checkbox',
-        '#title' => 'Prepopulate form from URL?',
-        '#default_value' => variable_get('prepopulate_allowed_' . $type, TRUE),
-        '#description' => t('Allows fields to be prepopulated from the URL'),
-      );
-    break;
-  } // endswitch $form_id
 
   if (variable_get('prepopulate_allowed_' . $type, TRUE) && $_GET['edit']) {
     foreach (array_keys( (array) $_GET['edit']) as $getvar) {
