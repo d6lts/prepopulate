@@ -4,10 +4,17 @@
 1. Copy the prepopulate/ directory into your Drupal installation's
 modules/ directory.
 
-2. Enable the prepopulate module in admin/modules
+2. Enable the prepopulate module in admin/build/modules
 
 3. For each content type that you want to allow prepopulating, set the
-prepopulate checkbox in admin/settings/content-types
+prepopulate checkbox in admin/content/types (it is set by default)
+
+4. Create the following bookmarklet in your browser: (replace 'yourwebsite' and 'yournodetype' as needed, e.g. blog or story). 
+
+javascript:u=document.location.href;t=document.title;s='<p><cite>'+window.getSelection()+'</cite></p>';pre='<p>[via '+escape('<a href=\"')+escape(u)+escape('\">')+escape(t) + escape('</a>]:</p>');void(window.open("http://www.yourwebsite.org/node/add/yournodetype?edit[title]="+escape(t)+'&edit[body_filter][body]='+pre+escape(s),'_blank','width=900,height=720,status=yes,resizable=yes,scrollbars=yes'));"
+
+(Blog this bookmarklet courtesy of: https://svn.bryght.com/dev/wiki/BlogThisBookmarklet)
+
 
 ---
 prepopulate.module by ea.Farris <eafarris@gmail.com>
