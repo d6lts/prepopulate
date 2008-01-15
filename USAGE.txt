@@ -77,6 +77,7 @@ Body fields are different. Though their HTML entity looks like this:
 You can't just take the name "body," throw it into a edit[body] and
 expect it to work. Drupal wraps the body field into a "body_filter"
 array when it gets processed. So, for body fields, a URL like:
+
   http://www.example.com/node/add/content?edit[body_filter][body]=This is the body
 
 ought to do the trick.
@@ -88,9 +89,11 @@ Multiple fields
 
 Prepopulate can handle pre-filling multiple fields from one URL. Just
 separate the edit variables with an ampersand:
+
   http://www.example.com/node/add/content?edit[title]=The title&edit[body_filter][body]=The body
 
 You're already using the ampersand with non-clean URLs:
+
   http://www.example.com?q=node/add/content&edit[title]=The title&edit[body_filter][body]=The body
 
 
@@ -99,7 +102,7 @@ Escaping special characters
 ---
 
 Some characters can't be put into URLs. Spaces, for example, work
-mostly, but occasionall they'll have to be replaced with the string %20.
+mostly, but occasionally they'll have to be replaced with the string %20.
 This is known as "percent encoding." Wikipedia has a partial list of
 percent codes at:
   http://en.wikipedia.org/wiki/Percent-encoding
@@ -124,6 +127,5 @@ http://oif.eafarris.com/node/add/content-web-link?edit[title]=drupal.org%20%7C%2
 
 If I had first selected some text on the page, it would be put into the
 body of the node.
-
 
 Happy prepopulating!
