@@ -12,7 +12,7 @@ function prepopulate_install() {
     case 'mysql':
     case 'mysqli':
     case 'pgsql':
-      $ret[] = db_query('UPDATE {system} SET weight = 10 WHERE name = "prepopulate"');
+      $ret[] = db_query("UPDATE {system} SET weight = 10 WHERE name = 'prepopulate'");
       break;
   } // endswitch (not used currently) on dbtype
 } // endfunction prepopulate_install
