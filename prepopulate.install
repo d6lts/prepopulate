@@ -1,18 +1,18 @@
 <?php
+// $Id$
 /* install file for prepopulate module */
 
+/**
+ * Implementation of hook_install().
+ */
 function prepopulate_install() {
-  // ensure that prepopulate sinks to the bottom during hook calls
+  // Ensure that prepopulate sinks to the bottom during hook calls
   // there should be a UI for this at some point.
   switch ($GLOBALS['db_type']) {
     case 'mysql':
     case 'mysqli':
     case 'pgsql':
-      $ret[] = db_query('UPDATE {system} SET weight = 10 WHERE name = "prepopulate"');
+      $ret[] = db_query("UPDATE {system} SET weight = 10 WHERE name = 'prepopulate'");
       break;
   } // endswitch (not used currently) on dbtype
 } // endfunction prepopulate_install
-
-
-// vim: tw=300 nowrap syn=php
-?>
