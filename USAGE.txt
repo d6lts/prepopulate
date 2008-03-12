@@ -1,14 +1,13 @@
-prepopulate.module usage
----
-
 $Id$
 
 See README.txt for a description of this module.
+See this documentation online at http://drupal.org/node/228167.
 
+USING PREPOPULATE MODULE
+========================
 
----
 Simple Usage
----
+------------
 
 Prepopulate the title field on a node creation form:
   http://www.example.com/node/add/content?edit[title]=This is the title
@@ -16,9 +15,8 @@ With 'non-clean' urls:
   http://www.example.com?q=node/add/content&edit[title]=This is the title
 
 
----
 How to find what variable to set
----
+--------------------------------
 
 This can be tricky, but there are a few things to keep in mind that
 should help.
@@ -66,9 +64,8 @@ and, again, for non-clean URLs, it's:
   http://www.example.com?q=node/add/content&edit[field_content][0][value]=A long text string
 
 
----
 Body fields
----
+-----------
 
 Body fields are different. Though their HTML entity looks like this:
   <textarea id="edit-body" class="form-textarea resizable processed"
@@ -83,9 +80,8 @@ array when it gets processed. So, for body fields, a URL like:
 ought to do the trick.
 
 
----
 Multiple fields
----
+---------------
 
 Prepopulate can handle pre-filling multiple fields from one URL. Just
 separate the edit variables with an ampersand:
@@ -97,9 +93,8 @@ You're already using the ampersand with non-clean URLs:
   http://www.example.com?q=node/add/content&edit[title]=The title&edit[body_filter][body]=The body
 
 
----
 Escaping special characters
----
+---------------------------
 
 Some characters can't be put into URLs. Spaces, for example, work
 mostly, but occasionally they'll have to be replaced with the string %20.
@@ -112,9 +107,8 @@ getting 'page not found' errors from Drupal, you should check to ensure
 that illegal characters are properly encoded.
 
 
----
 Bookmarklets
----
+------------
 
 Prepopulate.module was created for bookmarklets. Here is the actual
 bookmarklet I use to post web links to my site:
