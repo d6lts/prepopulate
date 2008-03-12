@@ -1,6 +1,7 @@
 $Id$
-# prepopulate.module installation instructions
----
+
+INSTALLING PREPOPULATE MODULE
+=============================
 
 1. Copy the prepopulate/ directory into your Drupal installation's
 modules directory (normally at sites/all/modules.)
@@ -10,5 +11,4 @@ modules directory (normally at sites/all/modules.)
 3. For each content type that you want to allow prepopulating, set the
 prepopulate checkbox in admin/content/types > edit.
 
----
-prepopulate.module by ea.Farris <eafarris@gmail.com>
+4. Refer to the USAGE.txt file or the online handbook at http://drupal.org/node/228167 for URL examples.
