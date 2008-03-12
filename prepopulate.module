@@ -1,14 +1,18 @@
 <?php
-/* prepopulate.module -- fill forms with data from GET
- * ea. Farris <eafarris@gmail.com>
- *    based on an idea from chx, from the conversation at
- *    http://www.drupal.org/node/27155
-
- * used to be rest.module, from my sandbox
-*/
-
 // $Id$
 
+/**
+ * @file
+ *  Fill form elements with data from GET.
+ *
+ *  Originally written by ea. Farris <eafarris@gmail.com>
+ *  Based on an idea from chx, from the conversation at
+ *  http://www.drupal.org/node/27155.
+ */
+
+/**
+ * Implementation of hook_help().
+ */
 function prepopulate_help($section) {
   switch($section) {
     case 'admin/modules#description':
@@ -17,30 +21,40 @@ function prepopulate_help($section) {
   } // endswitch $section
 } // endfunction prepopulate_help()
 
+/**
+ * Implementation of hook_form_alter().
+ */
 function prepopulate_form_alter($form_id, &$form) {
-  $type = $form['type']['#value'];
   $node = $form['#node'];
 
   switch ($form_id) {
-    case $type . '_node_settings': // on a node settings form, praise be to the FormsAPI!
-      $form['workflow']['prepopulate_allowed_' . $type] = array(
+    // On a node settings form, praise be to the FormsAPI!
+    case 'node_type_form':
+      $type = $form['#node_type']->type;
+      $form['workflow']['prepopulate_allowed'] = array(
         '#type' => 'checkbox',
         '#title' => 'Prepopulate form from URL?',
         '#default_value' => variable_get('prepopulate_allowed_' . $type, TRUE),
         '#description' => t('Allows fields to be prepopulated from the URL'),
       );
-    break;
+    return;
   } // endswitch $form_id
 
-  if (variable_get('prepopulate_allowed_' . $type, TRUE) && $_GET['edit']) {
-    foreach (array_keys( (array) $_GET['edit']) as $getvar) {
-      if (element_child($getvar) && !is_null($form[$getvar])) {
-        _prepopulate_get_walk($form[$getvar], $_GET['edit'][$getvar]);
-      }
-    } // endforeach get variable
-  } // endif any get vars
+  if (isset($node)) {
+    if (variable_get('prepopulate_allowed_'. $node->type, TRUE) && $_GET['edit']) {
+      foreach (array_keys((array)$_GET['edit']) as $getvar) {
+        if (element_child($getvar) && !is_null($form[$getvar])) {
+          _prepopulate_get_walk($form[$getvar], $_GET['edit'][$getvar]);
+        }
+      } // endforeach get variable
+    } // endif any get vars
+  }
+  
 } // endfunction prepopulate_form_alter()
 
+/**
+ * Internal helper to get variables from the $_GET.
+ */
 function _prepopulate_get_walk(&$form, &$getslice) {
   if (!is_array($getslice)) {
     $form['#default_value'] = $getslice;
@@ -53,5 +67,3 @@ function _prepopulate_get_walk(&$form, &$getslice) {
     } // endforeach walking through get
   } // endif getslice is not an array
 } // endfunction _prepopulate_get_walk()
-
-// vim: tw=300 nowrap syn=php
