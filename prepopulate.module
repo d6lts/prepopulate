@@ -44,7 +44,7 @@ function prepopulate_form_alter(&$form, $form_state, $form_id) {
     $node = $form['#node'];
     // Make sure this node type allows prepopulate and
     // that we have a $_GET variable in the URL.
-    if (variable_get('prepopulate_allowed_'. $node->type, TRUE) && $_GET['edit']) {
+    if (variable_get('prepopulate_allowed_'. $node->type, TRUE) && isset($_GET['edit'])) {
       foreach (array_keys((array)$_GET['edit']) as $getvar) {
         if (element_child($getvar) && !is_null($form[$getvar])) {
           _prepopulate_get_walk($form[$getvar], $_GET['edit'][$getvar]);
