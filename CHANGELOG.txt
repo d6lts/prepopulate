@@ -2,7 +2,10 @@ $Id$
 
 PREPOPULATE CHANGELOG
 =====================
+6.x-1.x-dev (March 16, 2008)
+Initial upgrade to 6.
 
+**** DRUPAL 5 ****
 5.x-1.3 (March 12, 2008)
 BUG #146072: SQL string incompatible with PostgreSQL.
 BUG #216472: fixed regression that removed content type checkboxes.

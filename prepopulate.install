@@ -6,13 +6,9 @@
  * Implementation of hook_install().
  */
 function prepopulate_install() {
+  $ret = array();
   // Ensure that prepopulate sinks to the bottom during hook calls
   // there should be a UI for this at some point.
-  switch ($GLOBALS['db_type']) {
-    case 'mysql':
-    case 'mysqli':
-    case 'pgsql':
-      $ret[] = db_query("UPDATE {system} SET weight = 10 WHERE name = 'prepopulate'");
-      break;
-  } // endswitch (not used currently) on dbtype
+  $ret[] = db_query("UPDATE {system} SET weight = 10 WHERE name = 'prepopulate'");
+  return $ret;
 } // endfunction prepopulate_install

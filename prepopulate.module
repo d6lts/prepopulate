@@ -13,8 +13,8 @@
 /**
  * Implementation of hook_help().
  */
-function prepopulate_help($section) {
-  switch($section) {
+function prepopulate_help($path, $arg) {
+  switch ($path) {
     case 'admin/modules#description':
       return t('Pre-populates forms for allowed content types with HTTP GET data');
       break;
@@ -24,23 +24,26 @@ function prepopulate_help($section) {
 /**
  * Implementation of hook_form_alter().
  */
-function prepopulate_form_alter($form_id, &$form) {
-  $node = $form['#node'];
-
+function prepopulate_form_alter(&$form, $form_state, $form_id) {
   switch ($form_id) {
-    // On a node settings form, praise be to the FormsAPI!
+    // Add our chekcbox to the content type edit forms
+    // (admin/content/node-type/$type).
     case 'node_type_form':
       $type = $form['#node_type']->type;
       $form['workflow']['prepopulate_allowed'] = array(
         '#type' => 'checkbox',
         '#title' => 'Prepopulate form from URL?',
-        '#default_value' => variable_get('prepopulate_allowed_' . $type, TRUE),
+        '#default_value' => variable_get('prepopulate_allowed_'. $type, TRUE),
         '#description' => t('Allows fields to be prepopulated from the URL'),
-      );
+      );      
     return;
   } // endswitch $form_id
 
-  if (isset($node)) {
+  // Process the URL on a node add/edit form (node/add/$type).
+  if (isset($form['#node'])) {
+    $node = $form['#node'];
+    // Make sure this node type allows prepopulate and
+    // that we have a $_GET variable in the URL.
     if (variable_get('prepopulate_allowed_'. $node->type, TRUE) && $_GET['edit']) {
       foreach (array_keys((array)$_GET['edit']) as $getvar) {
         if (element_child($getvar) && !is_null($form[$getvar])) {
@@ -58,7 +61,7 @@ function prepopulate_form_alter($form_id, &$form) {
 function _prepopulate_get_walk(&$form, &$getslice) {
   if (!is_array($getslice)) {
     $form['#default_value'] = $getslice;
-  } 
+  }
   else {
     foreach (array_keys($getslice) as $getvar) {
       if (element_child($getvar) && is_array($form) && !is_null($form[$getvar])) {
