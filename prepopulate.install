@@ -1,6 +1,5 @@
 <?php
 // $Id$
-/* install file for prepopulate module */
 
 /**
  * Implementation of hook_install().
@@ -11,4 +10,4 @@ function prepopulate_install() {
   // there should be a UI for this at some point.
   $ret[] = db_query("UPDATE {system} SET weight = 10 WHERE name = 'prepopulate'");
   return $ret;
-} // endfunction prepopulate_install
+}

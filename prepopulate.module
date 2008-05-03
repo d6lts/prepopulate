@@ -3,11 +3,11 @@
 
 /**
  * @file
- *  Fill form elements with data from GET.
+ * Fill form elements with data from GET values.
  *
- *  Originally written by ea. Farris <eafarris@gmail.com>
- *  Based on an idea from chx, from the conversation at
- *  http://www.drupal.org/node/27155.
+ * Originally written by ea. Farris <eafarris@gmail.com>
+ * Based on an idea from chx, from the conversation at
+ * http://www.drupal.org/node/27155.
  */
 
 /**
@@ -16,17 +16,17 @@
 function prepopulate_help($path, $arg) {
   switch ($path) {
     case 'admin/modules#description':
-      return t('Pre-populates forms for allowed content types with HTTP GET data');
+      return t('Prepopulates forms for allowed content types with HTTP GET data');
       break;
-  } // endswitch $section
-} // endfunction prepopulate_help()
+  }
+}
 
 /**
  * Implementation of hook_form_alter().
  */
 function prepopulate_form_alter(&$form, $form_state, $form_id) {
   switch ($form_id) {
-    // Add our chekcbox to the content type edit forms
+    // Add our checkbox to the content type edit forms
     // (admin/content/node-type/$type).
     case 'node_type_form':
       $type = $form['#node_type']->type;
@@ -35,9 +35,9 @@ function prepopulate_form_alter(&$form, $form_state, $form_id) {
         '#title' => 'Prepopulate form from URL?',
         '#default_value' => variable_get('prepopulate_allowed_'. $type, TRUE),
         '#description' => t('Allows fields to be prepopulated from the URL'),
-      );      
+      );
     return;
-  } // endswitch $form_id
+  }
 
   // Process the URL on a node add/edit form (node/add/$type).
   if (isset($form['#node'])) {
@@ -49,14 +49,18 @@ function prepopulate_form_alter(&$form, $form_state, $form_id) {
         if (element_child($getvar) && !is_null($form[$getvar])) {
           _prepopulate_get_walk($form[$getvar], $_GET['edit'][$getvar]);
         }
-      } // endforeach get variable
-    } // endif any get vars
+      }
+    }
   }
-  
-} // endfunction prepopulate_form_alter()
+}
 
 /**
- * Internal helper to get variables from the $_GET.
+ * Internal helper to set element values from the $_GET variable.
+ *
+ * @param &$form
+ *   Array. A form element.
+ * @param &$getslice
+ *   String or array. Value(s) to be applied to the element.
  */
 function _prepopulate_get_walk(&$form, &$getslice) {
   if (!is_array($getslice)) {
@@ -67,6 +71,6 @@ function _prepopulate_get_walk(&$form, &$getslice) {
       if (element_child($getvar) && is_array($form) && !is_null($form[$getvar])) {
         _prepopulate_get_walk($form[$getvar], $getslice[$getvar]);
       }
-    } // endforeach walking through get
-  } // endif getslice is not an array
-} // endfunction _prepopulate_get_walk()
+    }
+  }
+}
