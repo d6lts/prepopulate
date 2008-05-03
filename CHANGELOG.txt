@@ -2,6 +2,10 @@ $Id$
 
 PREPOPULATE CHANGELOG
 =====================
+**** DRUPAL 6 ****
+6.x-1.0 (may 3, 2008)
+First 6.x release.
+
 6.x-1.x-dev (March 16, 2008)
 Initial upgrade to 6.
 
