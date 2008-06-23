@@ -79,6 +79,11 @@ array when it gets processed. So, for body fields, a URL like:
 
 ought to do the trick.
 
+Contact forms
+-------------
+You can use prepopulate to fill in forms created by the core Contact module as well. Something like:
+
+http://d6/contact?edit[cid]=2
 
 Multiple fields
 ---------------

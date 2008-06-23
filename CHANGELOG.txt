@@ -2,7 +2,10 @@ $Id$
 
 PREPOPULATE CHANGELOG
 =====================
-**** DRUPAL 6 ****
+**** DRUPAL 6.x-2 ****
+FEATURE: #101916: Prepopulate any form, not just node edit forms.
+
+**** DRUPAL 6.x-1 ****
 6.x-1.0 (May 3, 2008)
 First 6.x release.
 
