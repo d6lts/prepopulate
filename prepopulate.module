@@ -62,15 +62,24 @@ function prepopulate_form_alter(&$form, $form_state, $form_id) {
  * @param &$getslice
  *   String or array. Value(s) to be applied to the element.
  */
-function _prepopulate_get_walk(&$form, &$getslice) {
-  if (!is_array($getslice)) {
-    $form['#default_value'] = $getslice;
-  }
-  else {
-    foreach (array_keys($getslice) as $getvar) {
-      if (element_child($getvar) && is_array($form) && !is_null($form[$getvar])) {
-        _prepopulate_get_walk($form[$getvar], $getslice[$getvar]);
+function _prepopulate_get_walk( & $form, & $getslice) {
+  if (is_array($getslice)) {
+    if (!is_null($form['#default_value'])) {
+      if (!is_array($form['#default_value'])) {
+        // Something went wrong so stop here.
+        return;
+      }
+      $form['#default_value'] = array_merge($form['#default_value'], $getslice);
+    }
+    else {
+      foreach (array_keys($getslice) as $getvar) {
+        if (element_child($getvar) && is_array($form) && !is_null($form[$getvar])) {
+          _prepopulate_get_walk($form[$getvar], $getslice[$getvar]);
+        }
       }
     }
+  }
+  else {
+    $form['#default_value'] = $getslice;
   }
 }
