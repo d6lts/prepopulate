@@ -16,7 +16,7 @@
 function prepopulate_help($path, $arg) {
   switch ($path) {
     case 'admin/modules#description':
-      return t('Prepopulates forms for allowed content types with HTTP GET data');
+      return t('Pre-populates forms with HTTP GET data');
       break;
   }
 }
@@ -25,30 +25,10 @@ function prepopulate_help($path, $arg) {
  * Implementation of hook_form_alter().
  */
 function prepopulate_form_alter(&$form, $form_state, $form_id) {
-  switch ($form_id) {
-    // Add our checkbox to the content type edit forms
-    // (admin/content/node-type/$type).
-    case 'node_type_form':
-      $type = $form['#node_type']->type;
-      $form['workflow']['prepopulate_allowed'] = array(
-        '#type' => 'checkbox',
-        '#title' => 'Prepopulate form from URL?',
-        '#default_value' => variable_get('prepopulate_allowed_'. $type, TRUE),
-        '#description' => t('Allows fields to be prepopulated from the URL'),
-      );
-    return;
-  }
-
-  // Process the URL on a node add/edit form (node/add/$type).
-  if (isset($form['#node'])) {
-    $node = $form['#node'];
-    // Make sure this node type allows prepopulate and
-    // that we have a $_GET variable in the URL.
-    if (variable_get('prepopulate_allowed_'. $node->type, TRUE) && isset($_GET['edit'])) {
-      foreach (array_keys((array)$_GET['edit']) as $getvar) {
-        if (element_child($getvar) && !is_null($form[$getvar])) {
-          _prepopulate_get_walk($form[$getvar], $_GET['edit'][$getvar]);
-        }
+  if (isset($_GET['edit'])) {
+    foreach (array_keys((array)$_GET['edit']) as $getvar) {
+      if (element_child($getvar) && !is_null($form[$getvar])) {
+        _prepopulate_get_walk($form[$getvar], $_GET['edit'][$getvar]);
       }
     }
   }
