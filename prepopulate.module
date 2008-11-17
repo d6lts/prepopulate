@@ -16,7 +16,7 @@
 function prepopulate_help($section) {
   switch($section) {
     case 'admin/modules#description':
-      return t('Pre-populates forms for allowed content types with HTTP GET data');
+      return t('Pre-populates forms with HTTP GET data');
       break;
   } // endswitch $section
 } // endfunction prepopulate_help()
@@ -27,27 +27,12 @@ function prepopulate_help($section) {
 function prepopulate_form_alter($form_id, &$form) {
   $node = $form['#node'];
 
-  switch ($form_id) {
-    // On a node settings form, praise be to the FormsAPI!
-    case 'node_type_form':
-      $type = $form['#node_type']->type;
-      $form['workflow']['prepopulate_allowed'] = array(
-        '#type' => 'checkbox',
-        '#title' => 'Prepopulate form from URL?',
-        '#default_value' => variable_get('prepopulate_allowed_' . $type, TRUE),
-        '#description' => t('Allows fields to be prepopulated from the URL'),
-      );
-    return;
-  } // endswitch $form_id
-
-  if (isset($node)) {
-    if (variable_get('prepopulate_allowed_'. $node->type, TRUE) && $_GET['edit']) {
-      foreach (array_keys((array)$_GET['edit']) as $getvar) {
-        if (element_child($getvar) && !is_null($form[$getvar])) {
-          _prepopulate_get_walk($form[$getvar], $_GET['edit'][$getvar]);
-        }
-      } // endforeach get variable
-    } // endif any get vars
+  if (isset($_GET['edit'])) {
+    foreach (array_keys((array)$_GET['edit']) as $getvar) {
+      if (element_child($getvar) && !is_null($form[$getvar])) {
+        _prepopulate_get_walk($form[$getvar], $_GET['edit'][$getvar]);
+      }
+    }
   }
   
 } // endfunction prepopulate_form_alter()
