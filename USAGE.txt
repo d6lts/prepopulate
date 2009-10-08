@@ -29,6 +29,20 @@ the below example, we prepopulate a node form's title based on a POST Request:
 </body></html>
 
 
+POST Requests
+-------------
+Since Prepopulate uses the $_REQUEST variable, you have access to prepopulate
+form values from either GET request in the URL, or the form POST requests. In
+the below example, we prepopulate a node form's title based on a POST Request:
+
+<html><body>
+  <form method="post" action="http://example.com/node/add/story">
+    Title: <input type="text" size="12" maxlength="12" name="edit[title]">
+    <input type="submit">
+  </form>
+</body></html>
+
+
 How to find what variable to set
 --------------------------------
 

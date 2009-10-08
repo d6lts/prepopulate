@@ -25,10 +25,10 @@ function prepopulate_help($path, $arg) {
  * Implementation of hook_form_alter().
  */
 function prepopulate_form_alter(&$form, $form_state, $form_id) {
-  if (isset($_GET['edit'])) {
-    foreach (array_keys((array)$_GET['edit']) as $getvar) {
+  if (isset($_REQUEST['edit'])) {
+    foreach (array_keys((array)$_REQUEST['edit']) as $getvar) {
       if (element_child($getvar) && !is_null($form[$getvar])) {
-        _prepopulate_get_walk($form[$getvar], $_GET['edit'][$getvar]);
+        _prepopulate_get_walk($form[$getvar], $_REQUEST['edit'][$getvar]);
       }
     }
   }
