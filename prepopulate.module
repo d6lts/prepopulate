@@ -30,12 +30,27 @@ function prepopulate_form_alter(&$form, $form_state, $form_id) {
     parse_str(base64_decode($_REQUEST['pp']), $_REQUEST);
   } 
   if (isset($_REQUEST['edit'])) {
+    $form['#after_build'][] = 'prepopulate_after_build';
+  }
+}
+
+/**
+ * An #after_build function to set the values prepopulated in the request.
+ */
+function prepopulate_after_build($form, &$form_state) {
+  if (isset($_REQUEST['pp'])) {
+    parse_str(base64_decode($_REQUEST['pp']), $_REQUEST);
+  }
+  if (isset($_REQUEST['edit'])) {
     foreach (array_keys((array)$_REQUEST['edit']) as $requestvar) {
-      if (element_child($requestvar) && !is_null($form[$requestvar])) {
-        _prepopulate_request_walk($form[$requestvar], $_REQUEST['edit'][$requestvar]);
+      if (element_child($requestvar) && !is_null($form[$requestvar]) && $form[$requestvar]['#type'] != "value") {
+        if (!isset($form[$requestvar]['#access']) || $form[$requestvar]['#access'] != FALSE) {
+          _prepopulate_request_walk($form[$requestvar], $_REQUEST['edit'][$requestvar]);
+        }
       }
     }
   }
+  return $form;
 }
 
 /**
@@ -57,13 +72,16 @@ function _prepopulate_request_walk(&$form, &$requestslice) {
     }
     else {
       foreach (array_keys($requestslice) as $requestvar) {
-        if (element_child($requestvar) && is_array($form) && !is_null($form[$requestvar])) {
-          _prepopulate_request_walk($form[$requestvar], $requestslice[$requestvar]);
+        if (element_child($requestvar) && !is_null($form[$requestvar]) && $form[$requestvar]['#type'] != "value") {
+          if (!isset($form[$requestvar]['#access']) || $form[$requestvar]['#access'] != FALSE) {
+            _prepopulate_request_walk($form[$requestvar], $_REQUEST['edit'][$requestvar]);
+          }
         }
       }
     }
   }
   else {
     $form['#default_value'] = $requestslice;
+    $form['#value'] = $requestslice;
   }
 }
