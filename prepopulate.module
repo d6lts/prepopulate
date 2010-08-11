@@ -21,16 +21,29 @@ function prepopulate_help($section) {
   } // endswitch $section
 } // endfunction prepopulate_help()
 
+
 /**
  * Implementation of hook_form_alter().
  */
 function prepopulate_form_alter($form_id, &$form) {
+  if (isset($_GET['edit'])) {
+    $form['#after_build'][] = 'prepopulate_after_build';
+  }
+}
+
+
+/**
+ * Implementation of prepopulate_after_build().
+ */
+function prepopulate_after_build($form_id, &$form) {
   $node = $form['#node'];
 
   if (isset($_GET['edit'])) {
     foreach (array_keys((array)$_GET['edit']) as $getvar) {
-      if (element_child($getvar) && !is_null($form[$getvar])) {
-        _prepopulate_get_walk($form[$getvar], $_GET['edit'][$getvar]);
+      if (element_child($getvar) && is_array($form) && !is_null($form[$getvar]) && $form[$getvar]['#type'] != "value") {
+        if (!isset($form[$getvar]['#access']) || $form[$getvar]['#access'] != FALSE) {
+          _prepopulate_get_walk($form[$getvar], $getslice[$getvar]);
+        }
       }
     }
   }
@@ -46,8 +59,10 @@ function _prepopulate_get_walk(&$form, &$getslice) {
   } 
   else {
     foreach (array_keys($getslice) as $getvar) {
-      if (element_child($getvar) && is_array($form) && !is_null($form[$getvar])) {
-        _prepopulate_get_walk($form[$getvar], $getslice[$getvar]);
+      if (element_child($getvar) && is_array($form) && !is_null($form[$getvar]) && $form[$getvar]['#type'] != "value") {
+        if (!isset($form[$getvar]['#access']) || $form[$getvar]['#access'] != FALSE) {
+          _prepopulate_get_walk($form[$getvar], $getslice[$getvar]);
+        }
       }
     } // endforeach walking through get
   } // endif getslice is not an array
