@@ -42,13 +42,8 @@ function prepopulate_after_build($form, &$form_state) {
     parse_str(base64_decode($_REQUEST['pp']), $_REQUEST);
   }
   if (isset($_REQUEST['edit'])) {
-    foreach (array_keys((array)$_REQUEST['edit']) as $requestvar) {
-      if (element_child($requestvar) && !is_null($form[$requestvar]) && $form[$requestvar]['#type'] != "value") {
-        if (!isset($form[$requestvar]['#access']) || $form[$requestvar]['#access'] != FALSE) {
-          _prepopulate_request_walk($form[$requestvar], $_REQUEST['edit'][$requestvar]);
-        }
-      }
-    }
+    $request = (array)$_REQUEST['edit'];
+    _prepopulate_request_walk($form, $request);
   }
   return $form;
 }
@@ -63,21 +58,16 @@ function prepopulate_after_build($form, &$form_state) {
  */
 function _prepopulate_request_walk(&$form, &$requestslice) {
   if (is_array($requestslice)) {
-    if (!is_null($form['#default_value'])) {
-      if (!is_array($form['#default_value'])) {
-        // Something went wrong so stop here.
-        return;
-      }
-      $form['#default_value'] = array_merge($form['#default_value'], $requestslice);
-    }
-    else {
-      foreach (array_keys($requestslice) as $requestvar) {
-        if (element_child($requestvar) && !is_null($form[$requestvar]) && $form[$requestvar]['#type'] != "value") {
-          if (!isset($form[$requestvar]['#access']) || $form[$requestvar]['#access'] != FALSE) {
-            _prepopulate_request_walk($form[$requestvar], $_REQUEST['edit'][$requestvar]);
-          }
+    foreach (array_keys($requestslice) as $requestvar) {
+      if (element_child($requestvar) && !is_null($form[$requestvar]) && $form[$requestvar]['#type'] != "value") {
+        if (!isset($form[$requestvar]['#access']) || $form[$requestvar]['#access'] != FALSE) {
+          _prepopulate_request_walk($form[$requestvar], $requestslice[$requestvar]);
         }
       }
+    }
+
+    if (is_array($form['#default_value'])) {
+      $form['#default_value'] = array_merge($form['#default_value'], $requestslice);
     }
   }
   else {
