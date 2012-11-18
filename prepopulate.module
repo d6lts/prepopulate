@@ -27,7 +27,7 @@ function prepopulate_form_alter(&$form, $form_state, $form_id) {
   // Provide for accepting base64 encoded fields.
   if (isset($_REQUEST['pp'])) {
     parse_str(base64_decode($_REQUEST['pp']), $_REQUEST);
-  } 
+  }
   if (isset($_REQUEST['edit'])) {
     $form['#after_build'][] = 'prepopulate_after_build';
   }
@@ -66,13 +66,13 @@ function _prepopulate_request_walk(&$form, &$requestslice) {
       }
     }
 
-    if (is_array($form['#default_value'])) {
+    if (!empty($form['#default_value']) && is_array($form['#default_value'])) {
       $form['#default_value'] = array_merge($form['#default_value'], $requestslice);
     }
   }
   else {
     if ($form['#type'] == 'markup' || empty($form['#type']) ) {
-      $form['#value'] = check_plain($requestslice);  
+      $form['#value'] = check_plain($requestslice);
     }
     else {
       $form['#value'] = $requestslice;
