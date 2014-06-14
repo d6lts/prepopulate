@@ -10,18 +10,18 @@
  */
 
 /**
- * Implementation of hook_help().
+ * Implements hook_help().
  */
 function prepopulate_help($path, $arg) {
   switch ($path) {
     case 'admin/modules#description':
       return t('Pre-populates forms with HTTP GET or POST data');
-      break;
+
   }
 }
 
 /**
- * Implementation of hook_form_alter().
+ * Implements hook_form_alter().
  */
 function prepopulate_form_alter(&$form, $form_state, $form_id) {
   // Provide for accepting base64 encoded fields.
@@ -41,7 +41,7 @@ function prepopulate_after_build($form, &$form_state) {
     parse_str(base64_decode($_REQUEST['pp']), $_REQUEST);
   }
   if (isset($_REQUEST['edit'])) {
-    $request = (array)$_REQUEST['edit'];
+    $request = (array) $_REQUEST['edit'];
     _prepopulate_request_walk($form, $request);
   }
   return $form;
@@ -50,9 +50,9 @@ function prepopulate_after_build($form, &$form_state) {
 /**
  * Internal helper to set element values from the $_REQUEST variable.
  *
- * @param &$form
- *   Array. A form element.
- * @param &$requestslice
+ * @param array &$form
+ *   A form element.
+ * @param mixed &$requestslice
  *   String or array. Value(s) to be applied to the element.
  */
 function _prepopulate_request_walk(&$form, &$requestslice) {
@@ -71,7 +71,7 @@ function _prepopulate_request_walk(&$form, &$requestslice) {
     }
   }
   else {
-    if ($form['#type'] == 'markup' || empty($form['#type']) ) {
+    if ($form['#type'] == 'markup' || empty($form['#type'])) {
       $form['#value'] = check_plain($requestslice);
     }
     else {
