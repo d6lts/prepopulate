@@ -24,6 +24,11 @@ function prepopulate_help($path, $arg) {
  * Implements hook_form_alter().
  */
 function prepopulate_form_alter(&$form, $form_state, $form_id) {
+  // If this is a subsequent step of a multi-step form, the prepopulate values
+  // have done their work, and the user may have modified them: bail.
+  if (!empty($form_state['rebuild'])) {
+    return;
+  }
   // Provide for accepting base64 encoded fields.
   if (isset($_REQUEST['pp'])) {
     parse_str(base64_decode($_REQUEST['pp']), $_REQUEST);
