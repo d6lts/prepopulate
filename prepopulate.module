@@ -82,5 +82,13 @@ function _prepopulate_request_walk(&$form, &$requestslice) {
     else {
       $form['#value'] = $requestslice;
     }
+    if ($form['#type'] == 'checkboxes' || $form['#type'] == 'checkbox') {
+      if (!empty($form['#value'])) {
+        $form['#checked'] = TRUE;
+      }
+      else {
+        $form['#checked'] = FALSE;
+      }
+    }
   }
 }
