@@ -24,10 +24,6 @@ function prepopulate_help($path, $arg) {
  * Implementation of hook_form_alter().
  */
 function prepopulate_form_alter(&$form, $form_state, $form_id) {
-  // Provide for accepting base64 encoded fields.
-  if (isset($_REQUEST['pp'])) {
-    parse_str(base64_decode($_REQUEST['pp']), $_REQUEST);
-  }
   if (isset($_REQUEST['edit'])) {
     $form['#after_build'][] = 'prepopulate_after_build';
   }
@@ -37,9 +33,6 @@ function prepopulate_form_alter(&$form, $form_state, $form_id) {
  * An #after_build function to set the values prepopulated in the request.
  */
 function prepopulate_after_build($form, &$form_state) {
-  if (isset($_REQUEST['pp'])) {
-    parse_str(base64_decode($_REQUEST['pp']), $_REQUEST);
-  }
   if (isset($_REQUEST['edit'])) {
     $request = (array)$_REQUEST['edit'];
     _prepopulate_request_walk($form, $request);
@@ -56,7 +49,19 @@ function prepopulate_after_build($form, &$form_state) {
  *   String or array. Value(s) to be applied to the element.
  */
 function _prepopulate_request_walk(&$form, &$requestslice) {
-  $limited_types = array('value', 'hidden', 'button', 'image_button');
+  $limited_types = array(
+    'actions',
+    'button',
+    'container',
+    'token',
+    'value',
+    'hidden',
+    'image_button',
+    'password',
+    'password_confirm',
+    'text_format',
+    'markup',
+    );
   if (is_array($requestslice)) {
     foreach (array_keys($requestslice) as $requestvar) {
       if (element_child($requestvar) && !is_null($form[$requestvar]) && !in_array($form[$requestvar]['#type'], $limited_types)) {
