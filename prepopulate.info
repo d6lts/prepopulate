@@ -1,3 +1,9 @@
 name = Prepopulate
 description = Allows form elements to be prepopulated from the URL.
 core = 6.x
+
+; Information added by Drupal 6 LTS vendors on 2016-03-06
+version = "6.x-2.3"
+core = "6.x"
+project = "prepopulate"
+datestamp = "1457276653"
